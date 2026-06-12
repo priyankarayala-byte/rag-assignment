@@ -1,0 +1,166 @@
+{
+  "name": "Ingestion",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Corpus Ingestion",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "documents",
+              "fieldType": "file",
+              "acceptFileTypes": ".md, .pdf"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        0,
+        0
+      ],
+      "id": "9d83639d-bd60-408d-9230-cd9eb989afa1",
+      "name": "On form submission",
+      "webhookId": "17ce0875-bd01-4ae2-860e-c69ee5b59c72"
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "agentic-rag-index",
+          "mode": "list",
+          "cachedResultName": "agentic-rag-index"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.3,
+      "position": [
+        208,
+        0
+      ],
+      "id": "ef78d9e5-99d9-4487-a1db-b5f2c06309b3",
+      "name": "Pinecone Vector Store",
+      "credentials": {
+        "pineconeApi": {
+          "id": "zUYYiPtb7dpVrkQa",
+          "name": "Pinecone account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "Qwen/Qwen3-Embedding-8B",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        208,
+        224
+      ],
+      "id": "fc34725c-c57e-4804-96d2-7a9bdcc7d6ac",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "M38hx4YdFKwDXQv2",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataType": "binary",
+        "textSplittingMode": "custom",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        416,
+        192
+      ],
+      "id": "bcde31cb-4c57-46da-ba53-d79b1c447d43",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "chunkSize": 4000,
+        "chunkOverlap": 800,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        512,
+        400
+      ],
+      "id": "f67500a8-15df-4107-bffe-49949a4f3d63",
+      "name": "Recursive Character Text Splitter"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "5e25b6a2-f8e6-41ea-938f-158103cca4bf",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9f0dc635525adc329f6d89c6b7e7cc8171ff598b1f9165f58cfe6deb58299e91"
+  },
+  "nodeGroups": [],
+  "id": "Hv82qEwoeF037V4l",
+  "tags": []
+}
