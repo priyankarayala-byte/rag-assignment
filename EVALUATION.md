@@ -27,7 +27,7 @@
 | 6 | How do agents remember things? | anthropic-memory-tool.md, langgraph-add-memory.md | 1 | Y | N | metadata-loss + partial retrieval | Accurate description of Anthropic's memory tool, but the LangGraph memory perspective was missed and no clarifying question was asked (prompt rule 4 not triggered). Cited "langgraph.md" — **a file that does not exist**: fabricated citation |
 | 7 | What's the best way to manage context in a long-running agent? | blog-effective-context-engineering-for-ai-agents.md, anthropic-context-windows/editing | 2 | Y | N | metadata-loss | Content is squarely from the context-engineering blog (compaction, structured notes, sub-agents) but cited blog-building-effective-agents.md + mcp-architecture.md — plausible-looking **wrong** files |
 | 8 | How should I debug my MCP integration? | mcp-debugging.md, mcp-inspector.md | 2 | Y | N | metadata-loss | Faithful to mcp-debugging.md structure (logs, Inspector, support channels); UUID citations |
-| 9 | What security risks should I watch out for when building MCP servers? | mcp-security_best_practices.md, mcp-authorization.md | — | — | — | — | **Run and fill in** |
+| 9 | What security risks should I watch out for when building MCP servers? | mcp-security_best_practices.md, mcp-authorization.md | 2 | Y | N | metadata-loss | Excellent multi-doc synthesis: named risks (session hijack, confused deputy, token passthrough, SSRF) match the security doc's exact sections, with correct mitigations; UUID citations |
 | 10 | When should I use multiple agents instead of a single agent? | blog-multi-agent-research-system.md, blog-building-effective-agents.md | 2 | Y | N | metadata-loss | Correct framing (open-ended problems, unpredictable subtasks, orchestrator-workers); cited "langgraph-docs.md" — **does not exist**: fabricated citation |
 
 ## Bucket C — Unanswerable traps (correct behavior = refusal)
@@ -44,11 +44,10 @@
 
 ## Summary
 
-- **Answer faithfulness:** 14 / 14 questions asked = **100%** (target: 90% ✅) — every substantive answer was grounded in corpus content, and all 5 traps were refused
-- **Citation accuracy:** **~1 / 9** answered questions (❌ — the headline failure)
+- **Answer faithfulness:** **15 / 15 = 100%** (target: 90% ✅) — every substantive answer was grounded in corpus content, and all 5 traps were refused
+- **Citation accuracy:** **~1 / 10** answered questions (❌ — the headline failure)
 - **Retrieval quality:** mean **1.9 / 2** (only Q6 was one-sided)
 - **Trap handling:** **5 / 5** refused correctly, zero hallucinated answers
-- *(Q9 pending — re-run to complete the set)*
 
 ### Failure analysis
 
