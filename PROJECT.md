@@ -2,7 +2,7 @@
 
 ## One-liner
 
-My RAG app helps **a QA automation engineer transitioning into agentic engineering** answer **conceptual and how-to questions about building AI agents** from **a curated corpus of 45 agent-engineering documents (Anthropic agent guides + engineering blogs, MCP documentation, LangGraph docs, 3 seminal papers)** in **an n8n chat interface** with **90% faithfulness and <10s latency**.
+My RAG app helps **a software engineer who is transitioning into agentic engineering** answer **conceptual and how-to questions about building AI agents** from **a curated corpus of 45 agent-engineering documents (Anthropic agent guides + engineering blogs, MCP documentation, LangGraph docs, 3 seminal papers)** in **an n8n chat interface** with **90% faithfulness and <10s latency**.
 
 ## Framework
 
