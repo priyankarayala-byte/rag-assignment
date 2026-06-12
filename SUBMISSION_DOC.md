@@ -53,14 +53,15 @@ I also used AI assistance (Claude Code) throughout the build for corpus curation
 2. **Embedding-dimension discipline.** Pinecone's index creation defaults (512-dim, or "integrated embedding model" presets) silently conflict with bring-your-own embeddings. The index had to be created with custom settings at exactly 4096 to match Qwen3-Embedding-8B, and the identical model must be used at ingestion *and* query time.
 3. **Credential redirection.** n8n auto-attached its "free OpenAI credits" credential to the embeddings node. Using it would have both violated the Nebius requirement and produced 1536-dim vectors that the 4096-dim index would reject — caught before ingestion.
 4. **Folder-upload assumption.** I expected to upload a folder of documents; n8n has no document library — files only exist as binary data inside a workflow execution, and persistence is the vector store's job. The Form Trigger (multiple files) became both the ingestion UI and the freshness mechanism: refresh = resubmit the form (with Clear Namespace on, making re-ingestion idempotent).
+5. **Citation metadata loss (found by the eval).** The bot's answers were 100% faithful, but its citations showed UUID filenames — and sometimes *invented* readable ones. Root cause: the multi-file form upload arrives as one item, so original filenames never reached the chunk metadata in Pinecone. Fix: a Code node that splits the upload into one item per file, a `file_name` metadata property on the Data Loader, and a prompt rule forbidding constructed filenames. My QA instinct to include trap questions and verify citations against the actual file list is what caught this — the answers alone looked perfect.
 
 ## 5. Evaluation summary
 
 15 questions (5 straightforward, 5 ambiguous/multi-doc, 5 unanswerable traps). Full per-question scores and failure analysis: EVALUATION.md.
 
-- Faithfulness: ___% (target 90%)
-- Retrieval quality: ___/2 mean · Citation accuracy: ___/10 · Traps refused: ___/5
-- Headline finding: *(fill in — e.g. "dense-only retrieval missed exact-acronym queries; reranking/hybrid is the first Track 2 upgrade")*
+- **Faithfulness: 100%** (15/15; target 90%) — every answer grounded in corpus content, zero hallucinated answers
+- **Retrieval quality: 1.9/2 mean** · **Traps refused: 5/5** · **Citation accuracy: ~1/10**
+- **Headline finding:** answer quality was excellent, but citations failed in a subtle way — chunk metadata stored n8n's internal UUID filenames instead of document names, so the model either printed UUIDs or *fabricated plausible filenames* (e.g. `langgraph-docs.md`, which doesn't exist). When the data needed to satisfy an instruction is missing, the model satisfies the instruction's form instead of its substance. Fix: per-file `file_name` metadata at ingestion + a prompt rule to never construct filenames.
 
 ## 6. Learnings and observations
 
